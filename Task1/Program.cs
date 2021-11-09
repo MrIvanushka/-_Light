@@ -4,16 +4,16 @@
     {
         static void Main(string[] args)
         {
-            float hp;
+            double hp;
             string name;
             bool isAlive;
-            bool isVisible;
             int enemyCount;
             uint money;
             float duration;
-            float damage;
-            float armor;
-            float attackRange;
+            ulong itemCount;
+            long mapLength;
+            ushort index;
+            char currentSymbol;
         }
     }
 }
