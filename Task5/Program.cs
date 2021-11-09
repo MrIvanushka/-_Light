@@ -14,7 +14,6 @@ namespace ConsoleApp3
             goldCount -= gemCount * gemCurrency;
             Console.WriteLine($"Кристаллов получено: {gemCount}");
             Console.WriteLine($"Золота осталось: {goldCount}");
-            Console.Read();
         }
     }
 }
