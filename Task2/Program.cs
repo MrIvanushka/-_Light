@@ -14,7 +14,7 @@ namespace ConsoleApp3
             string zodiacSign = Console.ReadLine();
             Console.Write("Кем вы работаете? \n");
             string job = Console.ReadLine();
-            Console.Write($" зовут {name}, вам {age} лет, вы {zodiacSign} и работаете {job}.");
+            Console.Write($"Вас зовут {name}, вам {age} лет, вы {zodiacSign} и работаете {job}.");
         }
     }
 }
