@@ -39,24 +39,30 @@ namespace ConsoleApp3
                             case "dollars":
                                 Console.Write("Сколько долларов хотите купить? ");
                                 float buyDollarsValue = Convert.ToSingle(Console.ReadLine());
+
                                 if (rubles > buyDollarsValue * rublesToDollarsPrice)
                                 {
                                     dollars += buyDollarsValue;
                                     rubles -= buyDollarsValue * rublesToDollarsPrice;
                                 }
                                 else
+                                {
                                     Console.WriteLine("У вас недостаточно средств.");
+                                }
                                 break;
                             case "euros":
                                 Console.Write("Сколько евро хотите купить? ");
                                 float buyEurosValue = Convert.ToSingle(Console.ReadLine());
+
                                 if (rubles > buyEurosValue * rublesToEurosPrice)
                                 {
                                     euros += buyEurosValue;
                                     rubles -= buyEurosValue * rublesToEurosPrice;
                                 }
                                 else
+                                {
                                     Console.WriteLine("У вас недостаточно средств.");
+                                }
                                 break;
                             case "exit":
                                 timeToExit = true;
@@ -78,24 +84,30 @@ namespace ConsoleApp3
                             case "rubles":
                                 Console.Write("Сколько рублей хотите купить? ");
                                 float buyRublesValue = Convert.ToSingle(Console.ReadLine());
+
                                 if (dollars > buyRublesValue * dollarsToRublesPrice)
                                 {
                                     rubles += buyRublesValue;
                                     dollars -= buyRublesValue * dollarsToRublesPrice;
                                 }
                                 else
+                                {
                                     Console.WriteLine("У вас недостаточно средств.");
+                                }
                                 break;
                             case "euros":
                                 Console.Write("Сколько евро хотите купить? ");
                                 float buyEurosValue = Convert.ToSingle(Console.ReadLine());
+
                                 if (dollars > buyEurosValue * dollarsToEurosPrice)
                                 {
                                     euros += buyEurosValue;
                                     dollars -= buyEurosValue * dollarsToEurosPrice;
                                 }
                                 else
+                                {
                                     Console.WriteLine("У вас недостаточно средств.");
+                                }
                                 break;
                             case "exit":
                                 timeToExit = true;
@@ -108,7 +120,7 @@ namespace ConsoleApp3
 
                     case "euros":
                         Console.Write("Введите валюту покупки (rubles, dollars): ");
-                        
+
                         switch (Console.ReadLine())
                         {
                             case "euros":
@@ -117,24 +129,30 @@ namespace ConsoleApp3
                             case "rubles":
                                 Console.Write("Сколько рублей хотите купить? ");
                                 float buyRublesValue = Convert.ToSingle(Console.ReadLine());
+
                                 if (euros > buyRublesValue * eurosToRublesPrice)
                                 {
                                     rubles += buyRublesValue;
                                     euros -= buyRublesValue * eurosToRublesPrice;
                                 }
                                 else
+                                {
                                     Console.WriteLine("У вас недостаточно средств.");
+                                }
                                 break;
                             case "dollars":
                                 Console.Write("Сколько долларов хотите купить? ");
                                 float buyDollarsValue = Convert.ToSingle(Console.ReadLine());
+
                                 if (dollars > buyDollarsValue * eurosToDollarsPrice)
                                 {
                                     dollars += buyDollarsValue;
                                     euros -= buyDollarsValue * eurosToDollarsPrice;
                                 }
                                 else
+                                {
                                     Console.WriteLine("У вас недостаточно средств.");
+                                }
                                 break;
                             case "exit":
                                 timeToExit = true;
