@@ -20,6 +20,10 @@ namespace ConsoleApp3
                     Console.WriteLine("!!Тайное послание!!");
                     break;
                 }
+                else
+                {
+                    Console.WriteLine("Пароль неверный.");
+                }
             }
             
         }

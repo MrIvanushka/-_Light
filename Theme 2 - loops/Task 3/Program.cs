@@ -11,6 +11,8 @@ namespace ConsoleApp3
             float dollarsToRublesPrice = 0.015f;
             float rublesToEurosPrice = 80f;
             float eurosToRublesPrice = 0.01f;
+            float dollarsToEurosPrice = dollarsToRublesPrice * rublesToEurosPrice;
+            float eurosToDollarsPrice = eurosToRublesPrice * rublesToDollarsPrice;
             Console.Write("Введите количество рублей: ");
             float rubles = Convert.ToInt32(Console.ReadLine());
             Console.Write("Введите количество долларов: ");
@@ -87,10 +89,10 @@ namespace ConsoleApp3
                             case "euros":
                                 Console.Write("Сколько евро хотите купить? ");
                                 float buyEurosValue = Convert.ToSingle(Console.ReadLine());
-                                if (dollars > buyEurosValue * dollarsToRublesPrice * rublesToEurosPrice)
+                                if (dollars > buyEurosValue * dollarsToEurosPrice)
                                 {
                                     euros += buyEurosValue;
-                                    dollars -= buyEurosValue * dollarsToRublesPrice * rublesToEurosPrice;
+                                    dollars -= buyEurosValue * dollarsToEurosPrice;
                                 }
                                 else
                                     Console.WriteLine("У вас недостаточно средств.");
@@ -126,10 +128,10 @@ namespace ConsoleApp3
                             case "dollars":
                                 Console.Write("Сколько долларов хотите купить? ");
                                 float buyDollarsValue = Convert.ToSingle(Console.ReadLine());
-                                if (dollars > buyDollarsValue * rublesToDollarsPrice * eurosToRublesPrice)
+                                if (dollars > buyDollarsValue * eurosToDollarsPrice)
                                 {
                                     dollars += buyDollarsValue;
-                                    euros -= buyDollarsValue * rublesToDollarsPrice * eurosToRublesPrice;
+                                    euros -= buyDollarsValue * eurosToDollarsPrice;
                                 }
                                 else
                                     Console.WriteLine("У вас недостаточно средств.");
