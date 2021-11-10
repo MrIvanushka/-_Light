@@ -151,7 +151,6 @@ namespace ConsoleApp3
             Console.WriteLine($"Осталось рублей: {rubles}");
             Console.WriteLine($"Осталось долларов: {dollars}");
             Console.WriteLine($"Осталось евро: {euros}");
-            Console.Read();
         }
     }
 }
