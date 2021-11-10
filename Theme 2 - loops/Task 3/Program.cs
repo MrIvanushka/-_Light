@@ -17,16 +17,18 @@ namespace ConsoleApp3
             float dollars = Convert.ToInt32(Console.ReadLine());
             Console.Write("Введите количество евро: ");
             float euros = Convert.ToInt32(Console.ReadLine());
-
             bool timeToExit = false;
+
             do
             {
                 Console.Write("Для выхода напишите exit.");
                 Console.Write("Введите валюту оплаты (rubles, dollars, euros): ");
+                
                 switch(Console.ReadLine())
                 {
                     case "rubles":
                         Console.Write("Введите валюту покупки (dollars, euros): ");
+                        
                         switch (Console.ReadLine())
                         {
                             case "rubles":
@@ -65,6 +67,7 @@ namespace ConsoleApp3
 
                     case "dollars":
                         Console.Write("Введите валюту покупки (rubles, euros): ");
+                        
                         switch (Console.ReadLine())
                         {
                             case "dollars":
@@ -103,6 +106,7 @@ namespace ConsoleApp3
 
                     case "euros":
                         Console.Write("Введите валюту покупки (rubles, dollars): ");
+                        
                         switch (Console.ReadLine())
                         {
                             case "euros":

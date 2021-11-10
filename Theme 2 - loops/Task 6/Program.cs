@@ -13,9 +13,12 @@ namespace ConsoleApp3
 
             for (int i = 0; i < frameWidth; i++)
                 Console.Write(frameSymbol);
+
             Console.WriteLine($"\n{frameSymbol}{name}{frameSymbol}");
+            
             for (int i = 0; i < frameWidth; i++)
                 Console.Write(frameSymbol);
+
             Console.Write('\n');
         }
         

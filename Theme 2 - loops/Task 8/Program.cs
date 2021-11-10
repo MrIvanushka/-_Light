@@ -17,9 +17,9 @@ namespace ConsoleApp3
             {
                 Console.WriteLine($"[Ход {turn} ХП героя: {playerHP} ХП босса: {bossHP}]");
                 Console.Write("Действие героя: ");
-
                 Random rand = new Random();
                 double currentBossDamage = bossDamage;
+                
                 switch(Console.ReadLine())
                 {
                     case "Charm":
@@ -40,6 +40,7 @@ namespace ConsoleApp3
                         double frostArrowFluctuation = (rand.NextDouble() * frostArrowDamage / 3 - frostArrowDamage / 6) / (fireballHold + 1);
                         double currentFrostArrowDamage = frostArrowDamage + frostArrowFluctuation;
                         bossHP -= currentFrostArrowDamage;
+                        
                         if (fireballHold > 0)
                         {
                             Console.WriteLine($"Герой выпускает ледяную стрелу и наносит {currentFrostArrowDamage} урона. \n" +
@@ -57,6 +58,7 @@ namespace ConsoleApp3
                     case "DarkShot":
                         double darkShotFluctuation = rand.NextDouble() * darkShotDamage / 3 - darkShotDamage / 6;
                         double currentDarkShotDamage = darkShotDamage + darkShotFluctuation;
+                        
                         if (charmHold >= 2)
                         {
 
@@ -87,7 +89,6 @@ namespace ConsoleApp3
                 Console.WriteLine("Герой был силён, но всё же не смог справиться с боссом.");
             else
                 Console.WriteLine("Герой наносит последний удар, и босс падает на землю.");
-            Console.ReadLine();
         }
         
     }

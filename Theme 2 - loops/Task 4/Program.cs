@@ -11,8 +11,8 @@ namespace ConsoleApp3
             string name = Console.ReadLine();
             Console.Write("Введите пароль: ");
             string password = Console.ReadLine();
-
             bool timeToExit = false;
+            
             do
             {
                 Console.Write($"<{name}>: ");
