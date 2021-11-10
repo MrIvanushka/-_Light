@@ -7,10 +7,10 @@ namespace ConsoleApp3
         static void Main(string[] args)
         {
             uint picturesInAlbum = 52;
-            uint setCapacity = 3;
-            uint setCount = picturesInAlbum / setCapacity;
-            uint freePicturesCount = picturesInAlbum % setCapacity;
-            Console.WriteLine($"Количество рядов: {setCount}");
+            uint rowCapacity = 3;
+            uint rowCount = picturesInAlbum / rowCapacity;
+            uint freePicturesCount = picturesInAlbum % rowCapacity;
+            Console.WriteLine($"Количество рядов: {rowCount}");
             Console.WriteLine($"Картинок сверх меры: {freePicturesCount}");
         }
     }

@@ -31,18 +31,22 @@ namespace ConsoleApp3
                         break;
                     case "ChangePassword":
                         if (commandList.Length > 1)
+                        {
                             Console.WriteLine("Ошибка: данная команда не должна иметь аргументов.");
+                        }
                         else
                         {
                             Console.WriteLine("Введите старый пароль: ");
                             string oldPassword = Console.ReadLine();
-                            if(oldPassword == password)
+                            if (oldPassword == password)
                             {
                                 Console.WriteLine("Введите новый пароль: ");
                                 password = Console.ReadLine();
                             }
                             else
+                            {
                                 Console.WriteLine("Ошибка: пароль неверно введён.");
+                            }
                         }
                         break;
                     case "ChangeForegroundColor":
@@ -50,7 +54,7 @@ namespace ConsoleApp3
                             Console.WriteLine("Ошибка: слишком много аргументов.");
                         else if (commandList.Length < 2)
                             Console.WriteLine("Ошибка: слишком мало аргументов.");
-                        {
+                        else
                             switch (commandList[1])
                             {
                                 case "r":
@@ -66,7 +70,6 @@ namespace ConsoleApp3
                                     Console.WriteLine("Ошибка: неизвестный аргумент. \nНапишите Help для просмотра списка команд");
                                     break;
                             }
-                        }
                         break;
                     case "Reset":
                         if (commandList.Length > 1)
@@ -76,7 +79,9 @@ namespace ConsoleApp3
                         break;
                     case "Help":
                         if (commandList.Length > 1)
+                        {
                             Console.WriteLine("Ошибка: данная команда не должна иметь аргументов.");
+                        }
                         else
                         {
                             Console.WriteLine("SwitchName [новое имя] - меняет имя пользователя \n" +

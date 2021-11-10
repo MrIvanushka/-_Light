@@ -6,12 +6,12 @@ namespace ConsoleApp3
     {
         static void Main(string[] args)
         {
-            int gemCurrency = 3;
+            int gemPrice = 3;
             Console.Write("Cколько у вас золота? ");
             int goldCount = Convert.ToInt32(Console.ReadLine());
             Console.Write("Cколько кристаллов хотите купить? ");
             int gemCount = Convert.ToInt32(Console.ReadLine());
-            goldCount -= gemCount * gemCurrency;
+            goldCount -= gemCount * gemPrice;
             Console.WriteLine($"Кристаллов получено: {gemCount}");
             Console.WriteLine($"Золота осталось: {goldCount}");
         }

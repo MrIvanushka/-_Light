@@ -6,8 +6,13 @@ namespace ConsoleApp3
     {
         static void Main(string[] args)
         {
-            for(;Console.ReadLine() != "exit"; )
-            { }
+            Console.Write("Введите exit чтобы выйти: ");
+            string command = Console.ReadLine();
+            while(command != "exit")
+            {
+                Console.Write("Ввод неверный. \nВведите exit чтобы выйти: ");
+                command = Console.ReadLine();
+            }
         }
     }
 }
