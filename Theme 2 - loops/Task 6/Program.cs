@@ -9,11 +9,11 @@ namespace ConsoleApp3
         {
             string name = Console.ReadLine();
             char frameSymbol = Convert.ToChar(Console.ReadLine());
-            int frameWidth = name.Length + 4;
+            int frameWidth = name.Length + 2;
 
             for (int i = 0; i < frameWidth; i++)
                 Console.Write(frameSymbol);
-            Console.WriteLine($"\n{frameSymbol} {name} {frameSymbol}");
+            Console.WriteLine($"\n{frameSymbol}{name}{frameSymbol}");
             for (int i = 0; i < frameWidth; i++)
                 Console.Write(frameSymbol);
             Console.Write('\n');

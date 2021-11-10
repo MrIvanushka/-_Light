@@ -7,7 +7,9 @@ namespace ConsoleApp3
 
         static void Main(string[] args)
         {
-            for (uint i = 7; i < 100; i += 7)
+            uint startValue = 7;
+            uint difference = 7;
+            for (uint i = startValue; i < 100; i += difference)
                 Console.Write(i + " ");
         }
         

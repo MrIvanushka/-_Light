@@ -8,15 +8,10 @@ namespace ConsoleApp3
         static void Main(string[] args)
         {
             double playerHP = 100, bossHP = 100, bossDamage = 10;
-            double fireballDamage = 10, frostArrowDamage = 5, darkShotDamage = 30;
+            double fireballDamage = 10, frostArrowDamage = 5, darkShotDamage = 30, frostDamageModifier = 0.7, charmDamageModifier = 0.4;
             int charmHold = 0;
             int fireballHold = 0;
 
-            Console.WriteLine("Герой отправляется на бой с боссом. Он подготовился и выучил 4 заклинания: \n" +
-                $"Fireball - наносит {fireballDamage} урона огнём и усиливается с каждым применением; \n" +
-                $"FrostArrow - наносит {frostArrowDamage} урона и замораживает босса, если конечно тот не горит; \n" +
-                "Charm - оберег, снижающий урон по герою во время действия; \n" +
-                "DarkShot - самое мощное и опасное заклинание, к нему надо быть готовым.");
 
             for (int turn = 1; playerHP > 0 && bossHP > 0; turn++)
             {
@@ -28,20 +23,22 @@ namespace ConsoleApp3
                 switch(Console.ReadLine())
                 {
                     case "Charm":
-                        currentBossDamage /= 3;
+                        currentBossDamage *= charmDamageModifier;
                         charmHold++;
                         fireballHold = 0;
                         Console.WriteLine("Герой готовит защитное заклинание");
                         break;
                     case "Fireball":
-                        double currentFireballDamage = fireballDamage + (rand.NextDouble() * fireballDamage / 3 - fireballDamage / 6) * (fireballHold + 1);
+                        double fireballFluctuation = rand.NextDouble() * fireballDamage / 3 * (fireballHold + 1) - fireballDamage / 6;
+                        double currentFireballDamage = fireballDamage + fireballFluctuation;
                         bossHP -= currentFireballDamage;
                         Console.WriteLine($"Герой выпускает огненный шар и наносит {currentFireballDamage} урона.");
                         charmHold = 0;
                         fireballHold++;
                         break;
                     case "FrostArrow":
-                        double currentFrostArrowDamage = frostArrowDamage + (rand.NextDouble() * frostArrowDamage / 3 - frostArrowDamage / 6) / (fireballHold + 1);
+                        double frostArrowFluctuation = (rand.NextDouble() * frostArrowDamage / 3 - frostArrowDamage / 6) / (fireballHold + 1);
+                        double currentFrostArrowDamage = frostArrowDamage + frostArrowFluctuation;
                         bossHP -= currentFrostArrowDamage;
                         if (fireballHold > 0)
                         {
@@ -52,13 +49,14 @@ namespace ConsoleApp3
                         {
                             Console.WriteLine($"Герой выпускает ледяную стрелу и наносит {currentFrostArrowDamage} урона. \n" +
                                 "Босс замораживается и становится слабее.");
-                            currentBossDamage *= 0.7;
+                            currentBossDamage *= frostDamageModifier;
                         }
                         fireballHold = 0;
                         charmHold = 0;
                         break;
                     case "DarkShot":
-                        double currentDarkShotDamage = darkShotDamage + (rand.NextDouble() * darkShotDamage / 3 - darkShotDamage / 6);
+                        double darkShotFluctuation = rand.NextDouble() * darkShotDamage / 3 - darkShotDamage / 6;
+                        double currentDarkShotDamage = darkShotDamage + darkShotFluctuation;
                         if (charmHold >= 2)
                         {
 
@@ -79,7 +77,8 @@ namespace ConsoleApp3
                 }
                 if (bossHP > 0)
                 {
-                    currentBossDamage = currentBossDamage + (rand.NextDouble() * currentBossDamage / 3 - currentBossDamage / 6);
+                    double bossDamageFluctuation = rand.NextDouble() * currentBossDamage / 3 - currentBossDamage / 6;
+                    currentBossDamage = currentBossDamage + bossDamageFluctuation;
                     Console.WriteLine($"Босс замахивается молотом и наносит {currentBossDamage} урона. \n");
                     playerHP -= currentBossDamage;
                 }

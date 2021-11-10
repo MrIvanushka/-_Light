@@ -9,14 +9,17 @@ namespace ConsoleApp3
         {
             string message = "!!Тайное послание!!";
             string rightPassword = "abcd";
-            Console.Write("Введите пароль: ");
-            string password = Console.ReadLine();
-            while(password != rightPassword)
+            for (int i = 0; i < 3; i++)
             {
-                Console.Write("Ошибка: пароль неверный. \nВведите пароль: ");
-                password = Console.ReadLine();
+                Console.Write("Введите пароль: ");
+                string password = Console.ReadLine();
+                if(password == rightPassword)
+                {
+                    Console.WriteLine("!!Тайное послание!!");
+                    break;
+                }
             }
-            Console.WriteLine("!!Тайное послание!!");
+            
         }
         
     }
