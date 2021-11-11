@@ -8,9 +8,7 @@ namespace ConsoleApp3
         static void Main(string[] args)
         {
             uint size = 0;
-            uint capacity = 2;
-            int[] array = new int[capacity];
-            int sum = 0;
+            int[] array = new int[0];
             string command = "";
 
             do
@@ -20,27 +18,30 @@ namespace ConsoleApp3
                 try
                 {
                     int newElement = Convert.ToInt32(command);
+                    int[] biggerArray = new int[size + 1];
                     
-                    if(size == capacity)
-                    {
-                        int[] biggerArray = new int[2 * capacity];
+                    for (int i = 0; i < size; i++)
+                        biggerArray[i] = array[i];
 
-                        for (int i = 0; i < capacity; i++)
-                            biggerArray[i] = array[i];
-
-                        array = biggerArray;
-                        capacity *= 2;
-                    }
+                    array = biggerArray;
                     array[size] = newElement;
-                    sum += newElement;
                     size++;
                 }
                 catch(FormatException)
                 {
                     if (command == "sum")
+                    {
+                        int sum = 0;
+
+                        for (int i = 0; i < size; i++)
+                            sum += array[i];
+
                         Console.WriteLine(sum);
+                    }
                     else if (command != "exit")
+                    {
                         Console.WriteLine("Неизвестная команда.");
+                    }
                 }
 
             }
