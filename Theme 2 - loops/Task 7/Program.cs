@@ -9,8 +9,9 @@ namespace ConsoleApp3
         {
             string message = "!!Тайное послание!!";
             string rightPassword = "abcd";
-            
-            for (int i = 0; i < 3; i++)
+            uint attemptsNumber = 3;
+
+            for (uint i = 0; i < attemptsNumber; i++)
             {
                 Console.Write("Введите пароль: ");
                 string password = Console.ReadLine();
