@@ -35,7 +35,8 @@ namespace ConsoleApp3
                         Console.WriteLine("Герой готовит защитное заклинание");
                         break;
                     case "Fireball":
-                        double fireballFluctuation = random.NextDouble() * fireballDamage * attackFluctuation * (fireballHold + 1) - fireballDamage * attackFluctuation / 2;
+                        double fireballFluctuationInPercents = random.NextDouble() * attackFluctuation * (fireballHold + 1) - attackFluctuation / 2;
+                        double fireballFluctuation = fireballFluctuationInPercents * fireballDamage;
                         double currentFireballDamage = fireballDamage + fireballFluctuation;
                         bossHP -= currentFireballDamage;
                         Console.WriteLine($"Герой выпускает огненный шар и наносит {currentFireballDamage} урона.");
@@ -43,7 +44,8 @@ namespace ConsoleApp3
                         fireballHold++;
                         break;
                     case "FrostArrow":
-                        double frostArrowFluctuation = (random.NextDouble() * frostArrowDamage * attackFluctuation - frostArrowDamage * attackFluctuation / 2) / (fireballHold + 1);
+                        double frostArrowFluctuationInPercents = random.NextDouble() * attackFluctuation - attackFluctuation / 2;
+                        double frostArrowFluctuation = frostArrowDamage * frostArrowFluctuationInPercents / (fireballHold + 1);
                         double currentFrostArrowDamage = frostArrowDamage + frostArrowFluctuation;
                         bossHP -= currentFrostArrowDamage;
                         
@@ -62,7 +64,8 @@ namespace ConsoleApp3
                         charmHold = 0;
                         break;
                     case "DarkShot":
-                        double darkShotFluctuation = random.NextDouble() * darkShotDamage * attackFluctuation - darkShotDamage * attackFluctuation / 2;
+                        double darkShotFluctuationInPercents = random.NextDouble() * attackFluctuation - attackFluctuation / 2;
+                        double darkShotFluctuation = darkShotFluctuationInPercents * darkShotDamage;
                         double currentDarkShotDamage = darkShotDamage + darkShotFluctuation;
                         
                         if (charmHold >= 2)
@@ -85,7 +88,8 @@ namespace ConsoleApp3
                 }
                 if (bossHP > 0)
                 {
-                    double bossDamageFluctuation = random.NextDouble() * currentBossDamage * attackFluctuation - currentBossDamage * attackFluctuation / 2;
+                    double bossDamageFluctuationInPercents = random.NextDouble() * attackFluctuation - attackFluctuation / 2;
+                    double bossDamageFluctuation = bossDamageFluctuationInPercents * currentBossDamage;
                     currentBossDamage = currentBossDamage + bossDamageFluctuation;
                     Console.WriteLine($"Босс замахивается молотом и наносит {currentBossDamage} урона. \n");
                     playerHP -= currentBossDamage;
