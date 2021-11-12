@@ -52,7 +52,7 @@ namespace ConsoleApp3
 
                     }
                 }
-                catch(System.Exception exception)
+                catch (System.Exception exception)
                 {
                     PrintErrorMessage(exception.Message);
                 }
@@ -125,7 +125,7 @@ namespace ConsoleApp3
         {
             int[] foundNames = new int[0];
 
-            for(int i = 0; i < names.Length; i++)
+            for (int i = 0; i < names.Length; i++)
             {
                 string surname = names[i].Split(' ')[0];
 
@@ -135,8 +135,8 @@ namespace ConsoleApp3
                     foundNames[foundNames.Length - 1] = i;
                 }
             }
-            
-            if(foundNames.Length == 0)
+
+            if (foundNames.Length == 0)
                 throw new Exception("Сотрудники с данной фамилией не найдены");
 
             return foundNames;
