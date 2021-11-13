@@ -13,13 +13,13 @@ namespace ConsoleApp4
             do
             {
                 command = Console.ReadLine();
-
-                try
+                int newElement;
+                    
+                if(int.TryParse(command, out newElement))
                 {
-                    int newElement = Convert.ToInt32(command);
                     list.Add(newElement);
                 }
-                catch (FormatException)
+                else
                 {
                     if (command == "sum")
                     {
