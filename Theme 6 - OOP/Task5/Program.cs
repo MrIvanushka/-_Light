@@ -20,7 +20,7 @@ namespace ConsoleApp3
 
     class ConsoleApp
     {
-        public bool IsClosed { get; private set; } = false;
+        public bool IsClosed { get; private set; }
         private string _title;
         private ConsolePanel topPanel;
 
@@ -29,6 +29,7 @@ namespace ConsoleApp3
 
         public ConsoleApp(string title)
         {
+            IsClosed = false;
             _title = title;
             topPanel = new ConsolePanel();
         }
@@ -91,14 +92,15 @@ namespace ConsoleApp3
 
     class Train
     {
-        private const int railcarSize = 60;
+        private readonly int _railcarSize;
         public int RailcarCount { get; set; }
 
         public Train(int peopleCount)
         {
-            RailcarCount = peopleCount / railcarSize;
+            _railcarSize = 60;
+            RailcarCount = peopleCount / _railcarSize;
 
-            if (peopleCount % railcarSize == 0)
+            if (peopleCount % _railcarSize == 0)
                 RailcarCount += 1;
         }
     }
@@ -121,10 +123,11 @@ namespace ConsoleApp3
     class ConsolePanel : List<Voyage>
     {
         private ConsoleColor _textColor;
-        private int[] labelSize = new int[] { 14, 14, 16 };
+        private readonly int[] labelSize;
 
         public ConsolePanel(ConsoleColor textColor = ConsoleColor.Yellow)
         {
+            labelSize = new int[] { 14, 14, 16 };
             _textColor = textColor;
         }
 
