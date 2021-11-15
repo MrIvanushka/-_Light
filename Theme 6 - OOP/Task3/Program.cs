@@ -48,10 +48,10 @@ namespace ConsoleApp3
                         _dataBase.Remove(GetID());
                         break;
                     case "Ban":
-                        ChangeAdmission(true);
+                        Ban();
                         break;
                     case "Unban":
-                        ChangeAdmission(false);
+                        Unban();
                         break;
                     case "PrintData":
                         PrintData();
@@ -79,11 +79,16 @@ namespace ConsoleApp3
             }
         }
 
-        private void ChangeAdmission(bool isBanned)
+        private void Ban()
         {
-            int id = GetID();
-            _dataBase.ChangeAdmission(GetID(), isBanned);
-            Console.WriteLine(_dataBase[id]);
+            _dataBase.Ban(GetID());
+            Console.WriteLine("Игрок успешно забанен");
+        }
+
+        private void Unban()
+        {
+            _dataBase.Unban(GetID());
+            Console.WriteLine("Игрок успешно разбанен");
         }
 
         private void PrintData()
@@ -136,10 +141,18 @@ namespace ConsoleApp3
             maxDictionaryKey++;
         }
 
-        public void ChangeAdmission(int playerID, bool isBanned)
+        public void Ban(int playerID)
         {
             if (ContainsKey(playerID) == true)
-                this[playerID].СhangeAdmission(isBanned);
+                this[playerID].Ban();
+            else
+                throw new Exception("Игрок с данным ID не найден.");
+        }
+
+        public void Unban(int playerID)
+        {
+            if (ContainsKey(playerID) == true)
+                this[playerID].Unban();
             else
                 throw new Exception("Игрок с данным ID не найден.");
         }
@@ -159,16 +172,20 @@ namespace ConsoleApp3
             _id = id;
         }
 
-        public void СhangeAdmission(bool isBanned)
+        public void Ban()
         {
-            if(_isBanned == isBanned)
-            {
-                if (isBanned == true)
-                    throw new Exception("Этот игрок уже был забанен");
-                else
-                    throw new Exception("Этот игрок уже был разбанен");
-            }
-            _isBanned = isBanned;
+            if(_isBanned)
+                throw new Exception("Этот игрок уже был забанен");
+
+            _isBanned = true;
+        }
+
+        public void Unban()
+        {
+            if (_isBanned == false)
+                throw new Exception("Этот игрок уже был разбанен");
+
+            _isBanned = false;
         }
 
         public override string ToString()
