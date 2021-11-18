@@ -30,7 +30,7 @@ namespace ConsoleApp4
                 });
                 disabledEffects.ForEach(effect => effects.Remove(effect));
             }
-            while (armies[0].SoilderPool.Count > 0 || armies[1].SoilderPool.Count > 0);
+            while (armies[0].SoilderPool.Count > 0 && armies[1].SoilderPool.Count > 0);
             Console.SetCursorPosition(0, 30);
         }
     }
