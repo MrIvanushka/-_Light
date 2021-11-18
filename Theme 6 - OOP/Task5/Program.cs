@@ -41,32 +41,33 @@ namespace ConsoleApp3
             topPanel.Render();
             string command = GetVariable($"<{_title}> ");
 
-            try
+            switch (command)
             {
-                switch (command)
-                {
-                    case "CreateVoyage":
-                        string startCity = GetVariable("Введити точку отправки: ");
-                        string finishCity = GetVariable("Введити точку назначения: ");
-                        int peopleCount = GetInt("Введите число пассажиров: ");
-                        Voyage voyage = new Voyage(startCity, finishCity, peopleCount);
-                        topPanel.Add(voyage);
-                        break;
-                    case "Exit":
-                        IsClosed = true;
-                        break;
-                    case "Help":
-                        Console.WriteLine("CreateVoyage \n"+"Exit");
-                        break;
-                    default:
-                        throw new System.Exception("Неизвестная команда. Напишите Help для открытия списка всех команд.");
-                        break;
+                case "CreateVoyage":
+                    string startCity = GetVariable("Введите точку отправки: ");
+                    string finishCity = GetVariable("Введите точку назначения: ");
+                    string peopleCountRaw = GetVariable("Введите количество пассажиров: ");
+                    int peopleCount;
 
-                }
-            }
-            catch (System.Exception exception)
-            {
-                PrintErrorMessage(exception.Message);
+                    if(int.TryParse(peopleCountRaw, out peopleCount) == false)
+                    {
+                        PrintErrorMessage("Невозможно прочитать количество пассажиров.");
+                        break;
+                    }
+
+                    Voyage voyage = new Voyage(startCity, finishCity, peopleCount);
+                    topPanel.Add(voyage);
+                    break;
+                case "Exit":
+                    IsClosed = true;
+                    break;
+                case "Help":
+                    Console.WriteLine("CreateVoyage \n"+"Exit");
+                    break;
+                default:
+                    PrintErrorMessage("Неизвестная команда. Напишите Help для открытия списка всех команд.");
+                    break;
+
             }
             Console.WriteLine("Нажмите любую клавишу...");
             Console.ReadKey();
@@ -94,6 +95,7 @@ namespace ConsoleApp3
     class Train
     {
         private readonly int _railcarSize;
+
         public int RailcarCount { get; set; }
 
         public Train(int peopleCount)
@@ -110,13 +112,13 @@ namespace ConsoleApp3
     {
         public string StartCity { get; private set; }
         public string FinishCity { get; private set; }
-        public Train ThisTrain { get; private set; }
+        public Train CurrentTrain { get; private set; }
 
         public Voyage(string startCity, string finishCity, int peopleCount)
         {
             StartCity = startCity;
             FinishCity = finishCity;
-            ThisTrain = new Train(peopleCount);
+            CurrentTrain = new Train(peopleCount);
         }
 
     }
@@ -149,7 +151,7 @@ namespace ConsoleApp3
                     ResizeableString[] labels = new ResizeableString[] 
                     {   new ResizeableString(voyage.StartCity), 
                         new ResizeableString(voyage.FinishCity),
-                        new ResizeableString(voyage.ThisTrain.RailcarCount.ToString()) };
+                        new ResizeableString(voyage.CurrentTrain.RailcarCount.ToString()) };
 
                     for (int i = 0; i < labels.Length; i++)
                     {

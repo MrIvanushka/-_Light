@@ -155,6 +155,8 @@ namespace ConsoleApp3
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine("Ошибка: " + message);
             Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("Нажмите любую клавишу...");
+            Console.ReadKey();
         }
     }
 
