@@ -18,20 +18,21 @@ namespace ConsoleApp3
         }
     }
 
-    class ConsoleApp
+    class TrainConfigurator
     {
-        public bool IsClosed { get; private set; }
         private string _title;
-        private ConsolePanel topPanel;
+        private ConsolePanel _topPanel;
 
-        public ConsoleApp() : this("TrainConfigurator")
+        public bool IsClosed { get; private set; }
+
+        public TrainConfigurator() : this("TrainConfigurator")
         { }
 
-        public ConsoleApp(string title)
+        public TrainConfigurator(string title)
         {
             IsClosed = false;
             _title = title;
-            topPanel = new ConsolePanel();
+            _topPanel = new ConsolePanel();
         }
 
         public void Update()
