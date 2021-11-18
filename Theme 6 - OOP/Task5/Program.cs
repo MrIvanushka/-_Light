@@ -73,11 +73,6 @@ namespace ConsoleApp3
             Console.ReadKey();
         }
 
-        private int GetInt(string message)
-        {
-            return Convert.ToInt32(GetVariable(message));
-        }
-
         private string GetVariable(string message)
         {
             Console.Write(message);
