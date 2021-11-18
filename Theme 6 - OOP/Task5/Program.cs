@@ -110,13 +110,13 @@ namespace ConsoleApp3
     {
         public string StartCity { get; private set; }
         public string FinishCity { get; private set; }
-        public Train ThisTrain { get; private set; }
+        public Train CurrentTrain { get; private set; }
 
         public Voyage(string startCity, string finishCity, int peopleCount)
         {
             StartCity = startCity;
             FinishCity = finishCity;
-            ThisTrain = new Train(peopleCount);
+            CurrentTrain = new Train(peopleCount);
         }
 
     }
@@ -149,7 +149,7 @@ namespace ConsoleApp3
                     ResizeableString[] labels = new ResizeableString[] 
                     {   new ResizeableString(voyage.StartCity), 
                         new ResizeableString(voyage.FinishCity),
-                        new ResizeableString(voyage.ThisTrain.RailcarCount.ToString()) };
+                        new ResizeableString(voyage.CurrentTrain.RailcarCount.ToString()) };
 
                     for (int i = 0; i < labels.Length; i++)
                     {
