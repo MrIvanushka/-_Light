@@ -1,37 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 
 namespace ConsoleApp4
 {
     class Army
     {
-        private List<Soilder> _soilderPool;
+        private List<Soldier> _soldierPool;
         private ConsoleColor _armyColor;
         private BattleGround _battleGround;
         public string Name { get; private set; }
-        public List<Soilder> SoilderPool => _soilderPool;
+        public int SoldierCount => _soldierPool.Count;
 
-        public Army(BattleGround battleGround, string name, ConsoleColor color, List<Coord2> soilderCoords, CellStatus status)
+        public Army(BattleGround battleGround, string name, ConsoleColor color, List<Vector2> soilderCoords, CellStatus status)
         {
             Name = name;
             _armyColor = color;
             Random random = new Random();
             int soilderClassCount = 5;
-            _soilderPool = new List<Soilder>();
+            _soldierPool = new List<Soldier>();
             _battleGround = battleGround;
 
             soilderCoords.ForEach(coord =>
             {
-                _soilderPool.Add(new Soilder(this, random.Next(soilderClassCount), coord, color, status));
+                _soldierPool.Add(new Soldier(this, random.Next(soilderClassCount), coord, color, status));
             });
         }
 
         public List<AttackData> Update(List<AttackData> attackDatas, List<ActiveEffect> effects)
         {
-            List<Soilder> deadSoilders = new List<Soilder>();
+            List<Soldier> deadSoilders = new List<Soldier>();
 
-            _soilderPool.ForEach(soilder =>
+            _soldierPool.ForEach(soilder =>
             {
 
                 attackDatas.ForEach(data =>
@@ -47,13 +48,15 @@ namespace ConsoleApp4
             attackDatas = new List<AttackData>();
 
             deadSoilders.ForEach(soilder => { 
-                _soilderPool.Remove(soilder);
+                _soldierPool.Remove(soilder);
                 HonorTheFallen(soilder); });
 
-            _soilderPool.ForEach(soilder =>
+            CellStatus[,] battleMap = _battleGround.GetBattleMap();
+
+            _soldierPool.ForEach(soilder =>
             {
-                soilder.Graphics.Move(_battleGround);
-                AttackData data = soilder.Combat.LocateTarget(_battleGround.Map);
+                soilder.Graphics.Move(_battleGround, in battleMap);
+                AttackData data = soilder.Combat.LocateTarget(in battleMap);
 
                 if (data != null)
                     attackDatas.Add(data);
@@ -62,9 +65,23 @@ namespace ConsoleApp4
             return attackDatas;
         }
 
-        public void HonorTheFallen(Soilder deadSoilder)
+        public List<Soldier> GetNeighbourAllies(CellStatus[,] map, Vector2 position)
         {
-            _soilderPool.Remove(deadSoilder);
+            List<Soldier> neighbourAllies = new List<Soldier>();
+
+            _soldierPool.ForEach(soilder => {
+                int deltaPosX = Math.Abs(soilder.Graphics.Position.X - position.X);
+                int deltaPosY = Math.Abs(soilder.Graphics.Position.Y - position.Y);
+                if (deltaPosX <= 1 && deltaPosY <= 1)
+                    neighbourAllies.Add(soilder);
+            });
+
+            return neighbourAllies;
+        }
+
+        public void HonorTheFallen(Soldier deadSoilder)
+        {
+            _soldierPool.Remove(deadSoilder);
             _battleGround.ClearCell(deadSoilder.Graphics.Position);
         }
     }

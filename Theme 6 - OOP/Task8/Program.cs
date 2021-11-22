@@ -9,8 +9,8 @@ namespace ConsoleApp4
 
         static void Main(string[] args)
         {
-            BattleGround battleGround = new BattleGround(50, 30);
-            Army[] armies = battleGround.CreateArmies(20, 7);
+            BattleGround battleGround = new BattleGround(100, 50);
+            Army[] armies = battleGround.CreateArmies(150, 50);
             List<AttackData> attackDatas = new List<AttackData>();
             List<ActiveEffect> effects = new List<ActiveEffect>();
 
@@ -30,17 +30,16 @@ namespace ConsoleApp4
                 });
                 disabledEffects.ForEach(effect => effects.Remove(effect));
             }
-            while (armies[0].SoilderPool.Count > 0 || armies[0].SoilderPool.Count > 0);
-            Console.SetCursorPosition(0, 30);
+            while (armies[0].SoldierCount > 0 && armies[1].SoldierCount > 0);
         }
     }
 
     class AttackData
     {
-        public SoilderCombat Attacker { get; private set; }
-        public Coord2 TargetPoint { get; private set; }
+        public SoldierCombat Attacker { get; private set; }
+        public Vector2 TargetPoint { get; private set; }
 
-        public AttackData(SoilderCombat attacker, Coord2 targetPoint)
+        public AttackData(SoldierCombat attacker, Vector2 targetPoint)
         {
             Attacker = attacker;
             TargetPoint = targetPoint;

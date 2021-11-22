@@ -12,13 +12,33 @@ namespace ConsoleApp4
     class BattleGround
     {
         private CellStatus[,] _map;
+        private CellStatus[,] _mapToRead;
+        private int _emptyCellCount;
 
-        public CellStatus[,] Map => _map;
+        public CellStatus[,] GetBattleMap()
+        {
+            SyncronizeMapCollections();
+            return _mapToRead;
+        }
 
         public BattleGround(int sizeX, int sizeY)
         {
-            GenerateMap(sizeX, sizeY);
+            do
+            {
+                _emptyCellCount = 0;
+                GenerateMap(sizeX, sizeY);
+            }
+            while (_emptyCellCount < 0.5f * sizeX * sizeY);
+            _mapToRead = new CellStatus[sizeX, sizeY];
+
             RenderScene();
+        }
+
+        private void SyncronizeMapCollections()
+        {
+            for (int i = 0; i < _map.GetLength(0); i++)
+                for (int j = 0; j < _map.GetLength(1); j++)
+                    _mapToRead[i, j] = _map[i, j];
         }
 
         private void GenerateMap(int sizeX = 50, int sizeY = 30)
@@ -26,7 +46,7 @@ namespace ConsoleApp4
             _map = new CellStatus[sizeX, sizeY];
             Random random = new Random();
             int endWallThickness = 2;
-            int randomFactor = 6;
+            int randomFactor = 2;
 
             for (int x = endWallThickness; x < sizeX - endWallThickness; x++)
                 for (int y = endWallThickness; y < sizeY - endWallThickness; y++)
@@ -34,11 +54,51 @@ namespace ConsoleApp4
                     int randomValue = random.Next(randomFactor);
 
                     if (randomValue > 0)
+                    {
                         _map[x, y] = CellStatus.Empty;
+                        _emptyCellCount++;
+                    }
                 }
+
+            UseCellAutomat(_map);
         }
 
-        public void RenderScene()
+        private void UseCellAutomat(CellStatus[,] map)
+        {
+            int minimalNeighboursToSurvive = 4;
+
+
+            for (int x = 1; x < map.GetLength(0) - 1; x++)
+                for (int y = 1; y < map.GetLength(1) - 1; y++)
+                {
+                    int neighbourCount = ScoreNeighbours(map, x, y);
+
+                    if (neighbourCount > minimalNeighboursToSurvive)
+                    {
+                        map[x, y] = CellStatus.Empty;
+                        _emptyCellCount++;
+                    }
+                    else if (neighbourCount < minimalNeighboursToSurvive)
+                    {
+                        map[x, y] = CellStatus.Wall;
+                        _emptyCellCount--;
+                    }
+                }
+        }
+        private int ScoreNeighbours(CellStatus[,] map, int coordX, int coordY)
+        {
+            int neighbourCount = 0;
+
+            for (int i = coordX - 1; i < coordX + 2; i++)
+                for (int j = coordY - 1; j < coordY + 2; j++)
+                    if ((i != coordX || j != coordY)&&map[i, j] == CellStatus.Empty)
+                        neighbourCount += 1;
+
+            return neighbourCount;
+        }
+
+
+        private void RenderScene()
         {
             Console.Clear();
 
@@ -50,37 +110,36 @@ namespace ConsoleApp4
                         Console.Write(' ');
                     else if (_map[x, y] == CellStatus.Wall)
                         Console.Write('#');
-                    else if (_map[x, y] == CellStatus.BlueArmy)
-                        Console.Write('B');
-                    else if (_map[x, y] == CellStatus.YellowArmy)
-                        Console.Write('Y');
                 }
                 Console.Write('\n');
             }
         }
 
-        public void ClearCell(Coord2 position)
+        public void ClearCell(Vector2 position)
         {
-            Map[position.X,position.Y] = CellStatus.Empty;
+            _map[position.X,position.Y] = CellStatus.Empty;
+            _mapToRead[position.X, position.Y] = CellStatus.Empty;
             Console.SetCursorPosition(position.X, position.Y);
             Console.Write(' ');
         }
 
-        public void RerenderCharacter(SoilderMoving soilder, Coord2 nextPosition)
+        public void RerenderCharacter(SoldierMoving soldier, CellStatus soldierStatus, Vector2 nextPosition)
         {
-            Map[soilder.Position.X, soilder.Position.Y] = CellStatus.Empty;
-            Map[nextPosition.X, nextPosition.Y] = soilder.SelfStatus;
+            _map[soldier.Position.X, soldier.Position.Y] = CellStatus.Empty;
+            _mapToRead[soldier.Position.X, soldier.Position.Y] = CellStatus.Empty;
+            _map[nextPosition.X, nextPosition.Y] = soldierStatus;
+            _mapToRead[nextPosition.X, nextPosition.Y] = soldierStatus;
             Console.SetCursorPosition(nextPosition.X, nextPosition.Y);
-            Console.ForegroundColor = soilder.SelfColor;
-            Console.Write(soilder.Icon);
+            Console.ForegroundColor = soldier.SelfColor;
+            Console.Write(soldier.Icon);
             Console.ForegroundColor = ConsoleColor.White;
         }
 
         public Army[] CreateArmies(int soilderCount, int rankLength)
         {
             Army[] armies = new Army[2];
-            List<Coord2> blueArmyPositions = new List<Coord2>();
-            List<Coord2> yellowArmyPositions = new List<Coord2>();
+            List<Vector2> blueArmyPositions = new List<Vector2>();
+            List<Vector2> yellowArmyPositions = new List<Vector2>();
             int rankCount = soilderCount / rankLength;
             int armyLeftOffsetX = (_map.GetLength(0) - rankLength) / 2;
             int armyRightOffsetX = armyLeftOffsetX + rankLength;
@@ -90,11 +149,11 @@ namespace ConsoleApp4
             {
                 for (int y = armyOffsetY; y <= armyOffsetY + rankCount; y++)
                 {
-                    blueArmyPositions.Add(new Coord2(x, y));
-                    Map[x, y] = CellStatus.BlueArmy;
+                    blueArmyPositions.Add(new Vector2(x, y));
+                    _map[x, y] = CellStatus.BlueArmy;
 
-                    yellowArmyPositions.Add(new Coord2(x, _map.GetLength(1) - y));
-                    Map[x, y] = CellStatus.YellowArmy;
+                    yellowArmyPositions.Add(new Vector2(x, _map.GetLength(1) - y));
+                    _map[x, y] = CellStatus.YellowArmy;
                 }
 
             }
@@ -104,33 +163,6 @@ namespace ConsoleApp4
             return armies;
         }
        
-    }
-
-    struct Coord2
-    {
-        public int X { get; private set; }
-        public int Y { get; private set; }
-
-        public Coord2(int x, int y)
-        {
-            X = x;
-            Y = y;
-        }
-
-        public static Coord2 operator +(Coord2 a, Coord2 b)
-        {
-            return new Coord2(a.X + b.X, a.Y + b.Y);
-        }
-
-        public static bool operator ==(Coord2 a, Coord2 b)
-        {
-            return a.X == b.X && a.Y == b.Y;
-        }
-
-        public static bool operator !=(Coord2 a, Coord2 b)
-        {
-            return a.X != b.X || a.Y != b.Y;
-        }
     }
 }
 

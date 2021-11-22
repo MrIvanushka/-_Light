@@ -8,12 +8,12 @@ namespace ConsoleApp4
     {
         private int _duration;
         private int _currentTime;
-        protected SoilderCombat _target;
+        protected SoldierCombat _target;
 
         public bool Enabled { get; private set; }
         protected int Duration => _duration;
 
-        public ActiveEffect(int duration, SoilderCombat target)
+        public ActiveEffect(int duration, SoldierCombat target)
         {
             Enabled = true;
             _currentTime = 0;
@@ -50,7 +50,7 @@ namespace ConsoleApp4
     {
         private float _damage;
 
-        public Burning(SoilderCombat target, int duration = 3, float damage = 5) : base(duration, target)
+        public Burning(SoldierCombat target, int duration = 3, float damage = 15) : base(duration, target)
         {
             _damage = damage;
         }
@@ -65,7 +65,7 @@ namespace ConsoleApp4
     {
         private float _damageModifier;
 
-        public Freezing(SoilderCombat target, int duration = 3) : base(duration, target)
+        public Freezing(SoldierCombat target, int duration = 3) : base(duration, target)
         {
             _damageModifier = target.Damage / 5;
         }
@@ -84,9 +84,9 @@ namespace ConsoleApp4
     class Demon : ActiveEffect
     {
         private float _damage;
-        private Warlock _caster;
+        private WarlockCombat _caster;
 
-        public Demon(SoilderCombat target, Warlock caster, int duration = 5, float damage = 5) : base(duration, target)
+        public Demon(SoldierCombat target, WarlockCombat caster, int duration = 5, float damage = 5) : base(duration, target)
         {
             _caster = caster;
             _damage = damage;

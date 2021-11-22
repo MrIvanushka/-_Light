@@ -4,9 +4,9 @@ using System.Text;
 
 namespace ConsoleApp4
 {
-    abstract class SoilderCombat
+    abstract class SoldierCombat
     {
-        protected Soilder ThisSoilder;
+        protected Soldier ThisSoilder { get; private set; }
         private float _health;
         private float _maxHealth;
         private float _damage;
@@ -18,7 +18,7 @@ namespace ConsoleApp4
 
 
 
-        public SoilderCombat(Soilder thisSoilder, float health, float damage)
+        public SoldierCombat(Soldier thisSoilder, float health, float damage)
         {
             _maxHealth = health;
             _health = health;
@@ -47,17 +47,17 @@ namespace ConsoleApp4
                 _health = _maxHealth;
         }
 
-        public virtual AttackData LocateTarget(CellStatus[,] map)
+        public virtual AttackData LocateTarget(in CellStatus[,] map)
         {
-            Coord2 position = ThisSoilder.Graphics.Position;
-            List<Coord2> enemyPositions = new List<Coord2>();
+            Vector2 position = ThisSoilder.Graphics.Position;
+            List<Vector2> enemyPositions = new List<Vector2>();
 
             for (int x = position.X - 1; x <= position.X + 1; x++)
             {
                 for (int y = position.Y - 1; y <= position.Y + 1; y++)
                 {
-                    if (map[x, y] == ThisSoilder.Graphics.TargetStatus)
-                        enemyPositions.Add(new Coord2(x, y));
+                    if (map[x, y] == ThisSoilder.TargetStatus)
+                        enemyPositions.Add(new Vector2(x, y));
                 }
             }
 
@@ -68,44 +68,44 @@ namespace ConsoleApp4
 
         }
 
-        public virtual void Attack(SoilderCombat target, List<ActiveEffect> effects)
+        public virtual void Attack(SoldierCombat target, List<ActiveEffect> effects)
         {
             target.TakeDamage(_damage);
         }
     }
 
-    class Wizard : SoilderCombat
+    class WizardCombat : SoldierCombat
     {
-        public Wizard(Soilder thisSoilder, float health, float damage) : base(thisSoilder,health, damage)
+        public WizardCombat(Soldier thisSoilder, float health, float damage) : base(thisSoilder,health, damage)
         { }
 
-        public override void Attack(SoilderCombat target, List<ActiveEffect> effects)
+        public override void Attack(SoldierCombat target, List<ActiveEffect> effects)
         {
             base.Attack(target, effects);
             effects.Add(new Burning(target));
         }
     }
 
-    class Warrior : SoilderCombat
+    class WarriorCombat : SoldierCombat
     {
         private float _damageModifier = 10;
 
-        public Warrior(Soilder thisSoilder, float health, float damage) : base(thisSoilder, health, damage)
+        public WarriorCombat(Soldier thisSoilder, float health, float damage) : base(thisSoilder, health, damage)
         { }
 
-        public override void Attack(SoilderCombat target, List<ActiveEffect> effects)
+        public override void Attack(SoldierCombat target, List<ActiveEffect> effects)
         {
             base.Attack(target, effects);
             ModifyDamage(_damageModifier);
         }
     }
 
-    class Warlock : SoilderCombat
+    class WarlockCombat : SoldierCombat
     {
         private List<Demon> _demons;
         private Random _random;
 
-        public Warlock(Soilder thisSoilder, float health, float damage) : base(thisSoilder, health, damage)
+        public WarlockCombat(Soldier thisSoilder, float health, float damage) : base(thisSoilder, health, damage)
         {
             _random = new Random();
             _demons = new List<Demon>();
@@ -126,7 +126,7 @@ namespace ConsoleApp4
             }
         }
 
-        public override void Attack(SoilderCombat target, List<ActiveEffect> effects)
+        public override void Attack(SoldierCombat target, List<ActiveEffect> effects)
         {
             Demon newDemon = new Demon(target, this);
             effects.Add(newDemon);
@@ -139,17 +139,17 @@ namespace ConsoleApp4
         }
     }
 
-    class Prist : SoilderCombat
+    class PristCombat : SoldierCombat
     {
         private float _charmPower;
         private int _chargeTime;
         private int _currentTime;
         private float _healingValue;
 
-        public Prist(Soilder thisSoilder, float health, float healingValue) : base(thisSoilder, health, 0)
+        public PristCombat(Soldier thisSoilder, float health, float healingValue) : base(thisSoilder, health, 0)
         {
             _charmPower = 5;
-            _chargeTime = 20;
+            _chargeTime = 10;
             _currentTime = 0;
             _healingValue = healingValue;
         }
@@ -159,23 +159,18 @@ namespace ConsoleApp4
             base.TakeDamage(damage / _charmPower);
         }
 
-        public override AttackData LocateTarget(CellStatus[,] map)
+        public override AttackData LocateTarget(in CellStatus[,] map)
         {
 
-            List<Soilder> allies = ThisSoilder.GetNeighbourAllies(map);
+            List<Soldier> allies = ThisSoilder.GetNeighbourAllies(map);
 
             if (allies.Count > 0)
-            {
                 allies.ForEach(ally => { if (ally.Combat.Health < 20f) ally.Combat.Heal(_healingValue); });
-                return null;
-            }
-            else
-            {
-                return base.LocateTarget(map);
-            }
+            
+            return base.LocateTarget(map);
         }
 
-        public override void Attack(SoilderCombat target, List<ActiveEffect> effects)
+        public override void Attack(SoldierCombat target, List<ActiveEffect> effects)
         {
             if (_currentTime < _chargeTime)
             {
@@ -183,18 +178,19 @@ namespace ConsoleApp4
             }
             else
             {
+                _currentTime = 0;
                 target.TakeDamage(1000);
             }
         }
     }
 
-    class FrostMage : SoilderCombat
+    class FrostMageCombat : SoldierCombat
     {
 
-        public FrostMage(Soilder thisSoilder, float health, float damage) : base(thisSoilder, health, damage)
+        public FrostMageCombat(Soldier thisSoilder, float health, float damage) : base(thisSoilder, health, damage)
         { }
 
-        public override void Attack(SoilderCombat target, List<ActiveEffect> effects)
+        public override void Attack(SoldierCombat target, List<ActiveEffect> effects)
         {
             base.Attack(target, effects);
             effects.Add(new Freezing(target, 2));
