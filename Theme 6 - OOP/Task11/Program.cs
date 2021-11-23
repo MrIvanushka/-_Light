@@ -18,11 +18,21 @@ namespace ConsoleApp3
             }
             while (service.Enabled);
         }
-
+    }
+    
         enum Breakdown
-        { BrakeFailure, BrokenHeadlight, Scratch }
+        { 
+            BrakeFailure, 
+            BrokenHeadlight, 
+            Scratch 
+        }
+        
         enum Detail
-        { Pads, Headlight, Filler }
+        {
+            Pads,
+            Headlight,
+            Filler
+        }
 
         class CarService
         {
@@ -185,7 +195,7 @@ namespace ConsoleApp3
                 Price = price;
             }
         }
-    }
+    
 
     
 }
