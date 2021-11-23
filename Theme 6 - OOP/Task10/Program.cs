@@ -40,15 +40,13 @@ namespace ConsoleApp3
 
         public int ContainerCount => _animalContainers.Length;
 
-        public Zoo()
+        public Zoo(int animalContainerCount = 4)
         {
-            _animalContainers = new AnimalContainer[]
-            {
-                new PigContainer(5),
-                new BearContainer(2),
-                new ParrotContainer(8),
-                new LionContainer(3),
-            };
+            Random random = new Random();
+            _animalContainers = new AnimalContainer[animalContainerCount];
+
+            for (int i = 0; i < _animalContainers.Length; i++)
+                _animalContainers[i] = new AnimalContainer();
         }
 
         public void ShowContainer(int index)
@@ -56,32 +54,93 @@ namespace ConsoleApp3
             if (index >= _animalContainers.Length || index < 0)
                 Console.WriteLine("Ошибка: нет вольера с таким номером.");
             else
-                Console.WriteLine(_animalContainers[index]);
+                Console.Write(_animalContainers[index]);
         }
     }
 
-    abstract class AnimalContainer
+    class AnimalContainer
     {
-        private string _animalType;
-        private int _count;
+        Animal[] _animals;
 
-        public AnimalContainer(string animalType, int count)
+        public AnimalContainer()
         {
-            _animalType = animalType;
-            _count = count;
+            Random random = new Random();
+            int animalCount = random.Next(4, 12);
+            _animals = new Animal[animalCount];
+
+            for(int i = 0; i < animalCount; i++)
+            {
+                Gender gender = (Gender)random.Next(2);
+                int animalType = random.Next(4);
+
+                switch(animalType)
+                {
+                    case 0:
+                        _animals[i] = new Pig(gender);
+                        break;
+                    case 1:
+                        _animals[i] = new Bear(gender);
+                        break;
+                    case 2:
+                        _animals[i] = new Parrot(gender);
+                        break;
+                    case 3:
+                        _animals[i] = new Lion(gender);
+                        break;
+                }
+            }
         }
 
         public override string ToString()
         {
-            return $"Вольер с {_animalType}, {_count} особей. Звук " + Cry();
+            string letter = $"Животных : {_animals.Length} \n";
+
+            foreach(var animal in _animals)
+            {
+                letter += animal + "\n";
+            }
+            return letter;
+        }
+    }
+
+    enum Gender
+    { Male, Female }
+
+    abstract class Animal
+    {
+
+
+        private string _animalType;
+        private Gender _gender;
+
+        public Animal(string animalType, Gender gender)
+        {
+            _animalType = animalType;
+            _gender = gender;
+        }
+
+        public override string ToString()
+        {
+            string gender = "";
+
+            switch(_gender)
+            {
+                case Gender.Female:
+                    gender = "самка";
+                    break;
+                case Gender.Male:
+                    gender = "самец";
+                    break;
+            }
+            return $"{_animalType}, {gender}. Звук " + Cry();
         }
 
         protected abstract string Cry();
     }
 
-    class PigContainer : AnimalContainer
+    class Pig : Animal
     {
-        public PigContainer(int count) : base("свиньи", count)
+        public Pig(Gender gender) : base("свинья", gender)
         { }
 
         protected override string Cry()
@@ -90,9 +149,9 @@ namespace ConsoleApp3
         }
     }
 
-    class BearContainer : AnimalContainer
+    class Bear : Animal
     {
-        public BearContainer(int count) : base("медведи", count)
+        public Bear(Gender gender) : base("медведь", gender)
         { }
 
         protected override string Cry()
@@ -101,9 +160,9 @@ namespace ConsoleApp3
         }
     }
 
-    class ParrotContainer : AnimalContainer
+    class Parrot : Animal
     {
-        public ParrotContainer(int count) : base("попугаи", count)
+        public Parrot(Gender gender) : base("попугай", gender)
         { }
 
         protected override string Cry()
@@ -112,9 +171,9 @@ namespace ConsoleApp3
         }
     }
 
-    class LionContainer : AnimalContainer
+    class Lion: Animal
     {
-        public LionContainer(int count) : base("львы", count)
+        public Lion(Gender gender) : base("лев", gender)
         { }
 
         protected override string Cry()
