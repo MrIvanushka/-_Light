@@ -60,7 +60,7 @@ namespace ConsoleApp3
 
     class AnimalContainer
     {
-        Animal[] _animals;
+        private Animal[] _animals;
 
         public AnimalContainer()
         {
@@ -104,12 +104,13 @@ namespace ConsoleApp3
     }
 
     enum Gender
-    { Male, Female }
+    { 
+        Male, 
+        Female 
+    }
 
     abstract class Animal
     {
-
-
         private string _animalType;
         private Gender _gender;
 
