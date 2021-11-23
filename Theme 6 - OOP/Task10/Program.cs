@@ -24,8 +24,6 @@ namespace ConsoleApp3
                     zoo.ShowContainer(containerIndex);
                 else if (command != "exit")
                     Console.WriteLine("Ошибка: неизвестная команда");
-                else
-                    continue;
 
                 Console.WriteLine("Нажмите любую клавишу...");
                 Console.ReadKey();
@@ -42,7 +40,6 @@ namespace ConsoleApp3
 
         public Zoo(int animalContainerCount = 4)
         {
-            Random random = new Random();
             _animalContainers = new AnimalContainer[animalContainerCount];
 
             for (int i = 0; i < _animalContainers.Length; i++)
@@ -60,7 +57,7 @@ namespace ConsoleApp3
 
     class AnimalContainer
     {
-        Animal[] _animals;
+        private Animal[] _animals;
 
         public AnimalContainer()
         {
@@ -108,8 +105,6 @@ namespace ConsoleApp3
 
     abstract class Animal
     {
-
-
         private string _animalType;
         private Gender _gender;
 

@@ -85,12 +85,12 @@ namespace ConsoleApp3
                         {
                             Console.WriteLine("Клиенту отказано");
                             PayFine(_missingDetailFine);
-                            return;
+                            workIsDone = true;
                         }
                         else if (fixingDetailName == "Exit")
                         {
                             Enabled = false;
-                            return;
+                            workIsDone = true;
                         }
                         else
                         {
@@ -106,7 +106,7 @@ namespace ConsoleApp3
                         _detailNames[fixingDetailName].UseDetail();
                         Console.WriteLine("Выбрана неверная деталь");
                         PayFine(_badWorkFine);
-                        return;
+                        workIsDone = true;
                     }
                     else
                     {
