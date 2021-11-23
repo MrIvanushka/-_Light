@@ -6,16 +6,14 @@ namespace ConsoleApp4
 {
     abstract class SoldierCombat
     {
-        protected Soldier ThisSoilder { get; private set; }
         private float _health;
         private float _maxHealth;
         private float _damage;
         private Random _random;
-        private Army enemyArmy;
 
         public float Health => _health;
         public float Damage => _damage;
-
+        protected Soldier ThisSoldier { get; private set; }
 
 
         public SoldierCombat(Soldier thisSoilder, float health, float damage)
@@ -23,7 +21,7 @@ namespace ConsoleApp4
             _maxHealth = health;
             _health = health;
             _damage = damage;
-            ThisSoilder = thisSoilder;
+            ThisSoldier = thisSoilder;
             _random = new Random();
         }
 
@@ -49,14 +47,14 @@ namespace ConsoleApp4
 
         public virtual AttackData LocateTarget(in CellStatus[,] map)
         {
-            Vector2 position = ThisSoilder.Graphics.Position;
+            Vector2 position = ThisSoldier.Graphics.Position;
             List<Vector2> enemyPositions = new List<Vector2>();
 
             for (int x = position.X - 1; x <= position.X + 1; x++)
             {
                 for (int y = position.Y - 1; y <= position.Y + 1; y++)
                 {
-                    if (map[x, y] == ThisSoilder.TargetStatus)
+                    if (map[x, y] == ThisSoldier.TargetStatus)
                         enemyPositions.Add(new Vector2(x, y));
                 }
             }
@@ -121,7 +119,7 @@ namespace ConsoleApp4
             }
             else
             {
-                _demons[0].SetActive(false);
+                _demons[0].Deactivate();
                 _demons.Remove(_demons[0]);
             }
         }
@@ -162,7 +160,7 @@ namespace ConsoleApp4
         public override AttackData LocateTarget(in CellStatus[,] map)
         {
 
-            List<Soldier> allies = ThisSoilder.GetNeighbourAllies(map);
+            List<Soldier> allies = ThisSoldier.GetNeighbourAllies(map);
 
             if (allies.Count > 0)
                 allies.ForEach(ally => { if (ally.Combat.Health < 20f) ally.Combat.Heal(_healingValue); });

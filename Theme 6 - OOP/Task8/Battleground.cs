@@ -34,6 +34,56 @@ namespace ConsoleApp4
             RenderScene();
         }
 
+        
+
+        public void ClearCell(Vector2 position)
+        {
+            _map[position.X,position.Y] = CellStatus.Empty;
+            _mapToRead[position.X, position.Y] = CellStatus.Empty;
+            Console.SetCursorPosition(position.X, position.Y);
+            Console.Write(' ');
+        }
+
+        public void RerenderCharacter(SoldierMoving soldier, CellStatus soldierStatus, Vector2 nextPosition)
+        {
+            _map[soldier.Position.X, soldier.Position.Y] = CellStatus.Empty;
+            _mapToRead[soldier.Position.X, soldier.Position.Y] = CellStatus.Empty;
+            _map[nextPosition.X, nextPosition.Y] = soldierStatus;
+            _mapToRead[nextPosition.X, nextPosition.Y] = soldierStatus;
+            Console.SetCursorPosition(nextPosition.X, nextPosition.Y);
+            Console.ForegroundColor = soldier.SelfColor;
+            Console.Write(soldier.Icon);
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+
+        public Army[] CreateArmies(int soilderCount, int rankLength)
+        {
+            Army[] armies = new Army[2];
+            List<Vector2> blueArmyPositions = new List<Vector2>();
+            List<Vector2> yellowArmyPositions = new List<Vector2>();
+            int rankCount = soilderCount / rankLength;
+            int armyLeftOffsetX = (_map.GetLength(0) - rankLength) / 2;
+            int armyRightOffsetX = armyLeftOffsetX + rankLength;
+            int armyOffsetY = 3;
+
+            for (int x = armyLeftOffsetX; x <= armyRightOffsetX; x++)
+            {
+                for (int y = armyOffsetY; y <= armyOffsetY + rankCount; y++)
+                {
+                    blueArmyPositions.Add(new Vector2(x, y));
+                    _map[x, y] = CellStatus.BlueArmy;
+
+                    yellowArmyPositions.Add(new Vector2(x, _map.GetLength(1) - y));
+                    _map[x, y] = CellStatus.YellowArmy;
+                }
+
+            }
+            Console.SetCursorPosition(0, 50);
+            armies[0] = new Army(this, "Жёлтая армия",ConsoleColor.Yellow, yellowArmyPositions, CellStatus.YellowArmy);
+            armies[1] = new Army(this, "Синяя армия", ConsoleColor.Blue, blueArmyPositions, CellStatus.BlueArmy);
+            return armies;
+        }
+        
         private void SyncronizeMapCollections()
         {
             for (int i = 0; i < _map.GetLength(0); i++)
@@ -96,8 +146,7 @@ namespace ConsoleApp4
 
             return neighbourCount;
         }
-
-
+        
         private void RenderScene()
         {
             Console.Clear();
@@ -113,54 +162,6 @@ namespace ConsoleApp4
                 }
                 Console.Write('\n');
             }
-        }
-
-        public void ClearCell(Vector2 position)
-        {
-            _map[position.X,position.Y] = CellStatus.Empty;
-            _mapToRead[position.X, position.Y] = CellStatus.Empty;
-            Console.SetCursorPosition(position.X, position.Y);
-            Console.Write(' ');
-        }
-
-        public void RerenderCharacter(SoldierMoving soldier, CellStatus soldierStatus, Vector2 nextPosition)
-        {
-            _map[soldier.Position.X, soldier.Position.Y] = CellStatus.Empty;
-            _mapToRead[soldier.Position.X, soldier.Position.Y] = CellStatus.Empty;
-            _map[nextPosition.X, nextPosition.Y] = soldierStatus;
-            _mapToRead[nextPosition.X, nextPosition.Y] = soldierStatus;
-            Console.SetCursorPosition(nextPosition.X, nextPosition.Y);
-            Console.ForegroundColor = soldier.SelfColor;
-            Console.Write(soldier.Icon);
-            Console.ForegroundColor = ConsoleColor.White;
-        }
-
-        public Army[] CreateArmies(int soilderCount, int rankLength)
-        {
-            Army[] armies = new Army[2];
-            List<Vector2> blueArmyPositions = new List<Vector2>();
-            List<Vector2> yellowArmyPositions = new List<Vector2>();
-            int rankCount = soilderCount / rankLength;
-            int armyLeftOffsetX = (_map.GetLength(0) - rankLength) / 2;
-            int armyRightOffsetX = armyLeftOffsetX + rankLength;
-            int armyOffsetY = 3;
-
-            for (int x = armyLeftOffsetX; x <= armyRightOffsetX; x++)
-            {
-                for (int y = armyOffsetY; y <= armyOffsetY + rankCount; y++)
-                {
-                    blueArmyPositions.Add(new Vector2(x, y));
-                    _map[x, y] = CellStatus.BlueArmy;
-
-                    yellowArmyPositions.Add(new Vector2(x, _map.GetLength(1) - y));
-                    _map[x, y] = CellStatus.YellowArmy;
-                }
-
-            }
-            Console.SetCursorPosition(0, 50);
-            armies[0] = new Army(this, "Жёлтая армия",ConsoleColor.Yellow, yellowArmyPositions, CellStatus.YellowArmy);
-            armies[1] = new Army(this, "Синяя армия", ConsoleColor.Blue, blueArmyPositions, CellStatus.BlueArmy);
-            return armies;
         }
        
     }

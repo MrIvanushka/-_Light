@@ -28,43 +28,6 @@ namespace ConsoleApp4
             });
         }
 
-        public List<AttackData> Update(List<AttackData> attackDatas, List<ActiveEffect> effects)
-        {
-            List<Soldier> deadSoilders = new List<Soldier>();
-
-            _soldierPool.ForEach(soilder =>
-            {
-
-                attackDatas.ForEach(data =>
-                {
-                    if (soilder.Graphics.Position == data.TargetPoint)
-                        data.Attacker.Attack(soilder.Combat, effects);
-                });
-                soilder.Graphics.DisableIcon(_battleGround);
-
-                if (soilder.Combat.Health < 0)
-                    deadSoilders.Add(soilder);
-            });
-            attackDatas = new List<AttackData>();
-
-            deadSoilders.ForEach(soilder => { 
-                _soldierPool.Remove(soilder);
-                HonorTheFallen(soilder); });
-
-            CellStatus[,] battleMap = _battleGround.GetBattleMap();
-
-            _soldierPool.ForEach(soilder =>
-            {
-                soilder.Graphics.Move(_battleGround, in battleMap);
-                AttackData data = soilder.Combat.LocateTarget(in battleMap);
-
-                if (data != null)
-                    attackDatas.Add(data);
-            });
-
-            return attackDatas;
-        }
-
         public List<Soldier> GetNeighbourAllies(CellStatus[,] map, Vector2 position)
         {
             List<Soldier> neighbourAllies = new List<Soldier>();
@@ -83,6 +46,46 @@ namespace ConsoleApp4
         {
             _soldierPool.Remove(deadSoilder);
             _battleGround.ClearCell(deadSoilder.Graphics.Position);
+        }
+
+        public void TakeDamageToSoldiers(List<AttackData> recievedDamageList, List<ActiveEffect> effects)
+        {
+            List<Soldier> deadSoilders = new List<Soldier>();
+
+            _soldierPool.ForEach(soilder =>
+            {
+
+                recievedDamageList.ForEach(data =>
+                {
+                    if (soilder.Graphics.Position == data.TargetPoint)
+                        data.Attacker.Attack(soilder.Combat, effects);
+                });
+                soilder.Graphics.DisableIcon(_battleGround);
+
+                if (soilder.Combat.Health < 0)
+                    deadSoilders.Add(soilder);
+            });
+
+            deadSoilders.ForEach(soldier => {
+                _soldierPool.Remove(soldier);
+                HonorTheFallen(soldier);
+            });
+        }
+
+        public List<AttackData> MoveSoldiers()
+        {
+            List<AttackData> causedDamageList = new List<AttackData>();
+            CellStatus[,] battleMap = _battleGround.GetBattleMap();
+
+            _soldierPool.ForEach(soldier =>
+            {
+                soldier.Graphics.Move(_battleGround, in battleMap);
+                AttackData data = soldier.Combat.LocateTarget(in battleMap);
+
+                if (data != null)
+                    causedDamageList.Add(data);
+            });
+            return causedDamageList;
         }
     }
 }

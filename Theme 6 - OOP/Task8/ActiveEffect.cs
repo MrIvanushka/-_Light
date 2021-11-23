@@ -8,7 +8,7 @@ namespace ConsoleApp4
     {
         private int _duration;
         private int _currentTime;
-        protected SoldierCombat _target;
+        protected SoldierCombat Target;
 
         public bool Enabled { get; private set; }
         protected int Duration => _duration;
@@ -18,18 +18,24 @@ namespace ConsoleApp4
             Enabled = true;
             _currentTime = 0;
             _duration = duration;
-            _target = target;
+            Target = target;
         }
 
         public void Update()
         {
             _currentTime++;
             UseEffect();
-            if (_currentTime == _duration)
+
+            if (_currentTime == _duration || Target.Health < 0)
             {
                 Enabled = false;
                 Disable();
             }
+        }
+        
+        public void Deactivate()
+        {
+            Enabled = false;
         }
 
         protected virtual void UseEffect()
@@ -40,10 +46,7 @@ namespace ConsoleApp4
         protected virtual void Disable()
         { }
 
-        public void SetActive(bool flag)
-        {
-            Enabled = flag;
-        }
+        
     }
 
     class Burning : ActiveEffect
@@ -57,7 +60,7 @@ namespace ConsoleApp4
 
         protected override void UseEffect()
         {
-            _target.TakeDamage(_damage);
+            Target.TakeDamage(_damage);
         }
     }
 
@@ -72,12 +75,12 @@ namespace ConsoleApp4
 
         protected override void UseEffect()
         {
-            _target.ModifyDamage(-_damageModifier);
+            Target.ModifyDamage(-_damageModifier);
         }
 
         protected override void Disable()
         {
-            _target.ModifyDamage(_damageModifier * Duration);
+            Target.ModifyDamage(_damageModifier * Duration);
         }
     }
 
@@ -94,7 +97,7 @@ namespace ConsoleApp4
 
         protected override void UseEffect()
         {
-            _target.TakeDamage(_damage);
+            Target.TakeDamage(_damage);
         }
 
         protected override void Disable()

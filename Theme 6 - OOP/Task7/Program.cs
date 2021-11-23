@@ -9,22 +9,24 @@ namespace ConsoleApp3
         static void Main(string[] args)
         {
             Random random = new Random();
-            Store store = new Store(random);
+            Store store = new Store();
             Queue<Shopper> shopperPool = new Queue<Shopper>();
             int shopperCount = 5;
 
             for (int i = 0; i < shopperCount; i++)
-                shopperPool.Enqueue(new Shopper(random.Next(100, 1000), store.GetProducts(random.Next(3, 10))));
+                shopperPool.Enqueue(new Shopper(random.Next(100, 1000), store.GetProducts(random.Next(3, 10), random)));
 
             for(int i = 1; shopperPool.Count > 0; i++)
             {
                 Shopper currentShopper = shopperPool.Dequeue();
                 Console.WriteLine($"Покупатель {i} кошелёк: {currentShopper.Money} руб.");
                 currentShopper.ShowCart();
-                currentShopper.BuyProducts();
+                currentShopper.BuyProducts(random);
                 currentShopper.ShowBoughtProducts();
                 Console.WriteLine("============================================");
+                
             }
+            Console.Read();
         }
     }
 
@@ -33,55 +35,35 @@ namespace ConsoleApp3
         private List<Product> _productsInCart;
         private List<Product> _boughtProducts;
         private int _money;
-        private Random _random;
 
         public int Money => _money;
 
         public Shopper(int money, List<Product> productsInCart)
-        {
-            Init(money, productsInCart);
-            _random = new Random();
-        }
-
-        public Shopper(int money, List<Product> productsInCart, Random random)
-        {
-            Init(money, productsInCart);
-            _random = random;
-        }
-
-        private void Init(int money, List<Product> productsInCart)
         {
             _money = money;
             _productsInCart = productsInCart;
             _boughtProducts = null;
         }
 
-        public void BuyProducts()
+        public void BuyProducts(Random random)
         {
             int orderAmount = ScoreOrderAmount();
             Console.WriteLine($"Сумма заказа: {orderAmount} руб.");
 
             while (orderAmount > _money)
             {
-                Product surplusProduct = _productsInCart[_random.Next(_productsInCart.Count)];
+                Product surplusProduct = _productsInCart[random.Next(_productsInCart.Count)];
                 orderAmount -= surplusProduct.Price;
                 Console.WriteLine($"Недостаточно средств. {surplusProduct.Name} убран.");
                 Console.WriteLine($"Сумма заказа: {orderAmount} руб.");
                 _productsInCart.Remove(surplusProduct);
             }
 
+            _money -= orderAmount;
             _boughtProducts = _productsInCart;
             _productsInCart = null;
         }
-
-        private int ScoreOrderAmount()
-        {
-            int orderAmount = 0;
-            _productsInCart.ForEach(product => orderAmount += product.Price);
-            
-            return orderAmount;
-        }
-
+        
         public void ShowCart()
         {
             ShowContainer(_productsInCart, "Корзина");
@@ -90,6 +72,14 @@ namespace ConsoleApp3
         public void ShowBoughtProducts()
         {
             ShowContainer(_boughtProducts, "Купленные продукты");
+        }
+
+        private int ScoreOrderAmount()
+        {
+            int orderAmount = 0;
+            _productsInCart.ForEach(product => orderAmount += product.Price);
+            
+            return orderAmount;
         }
 
         private void ShowContainer(List<Product> productList, string containerName)
@@ -108,21 +98,8 @@ namespace ConsoleApp3
     class Store
     {
         private Product[] _allProducts;
-        private Random _random;
 
         public Store()
-        {
-            InitProducts();
-            _random = new Random();
-        }
-
-        public Store(Random random)
-        {
-            InitProducts();
-            _random = random;
-        }
-
-        private void InitProducts()
         {
             _allProducts = new Product[]
            {
@@ -141,13 +118,13 @@ namespace ConsoleApp3
            };
         }
 
-        public List<Product> GetProducts(int productCount)
+        public List<Product> GetProducts(int productCount, Random random)
         {
             List<Product> exportProducts = new List<Product>();
 
             for(int i = 0; i < productCount; i++)
             {
-                exportProducts.Add(_allProducts[_random.Next(_allProducts.Length)]);
+                exportProducts.Add(_allProducts[random.Next(_allProducts.Length)]);
             }
             return exportProducts;
         }
@@ -166,7 +143,7 @@ namespace ConsoleApp3
 
         public override string ToString()
         {
-            return Name.ToString() + " " + Price.ToString() + " руб.";
+            return Name + " " + Price + " руб.";
         }
     }
 }
