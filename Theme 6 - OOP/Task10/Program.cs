@@ -101,7 +101,10 @@ namespace ConsoleApp3
     }
 
     enum Gender
-    { Male, Female }
+    { 
+        Male, 
+        Female 
+    }
 
     abstract class Animal
     {
