@@ -124,7 +124,7 @@ namespace ConsoleApp3
 
             for(int i = 0; i < productCount; i++)
             {
-                exportProducts.Add(_allProducts[random.Next(_allProducts.Length)]);
+                exportProducts.Add(new Product(_allProducts[random.Next(_allProducts.Length)]));
             }
             return exportProducts;
         }
@@ -139,6 +139,12 @@ namespace ConsoleApp3
         {
             Name = name;
             Price = price;
+        }
+
+        public Product(Product product)
+        {
+            Name = product.Name;
+            Price = product.Price;
         }
 
         public override string ToString()
