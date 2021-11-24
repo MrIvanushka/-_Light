@@ -26,19 +26,12 @@ namespace ConsoleApp3
             BrokenHeadlight, 
             Scratch 
         }
-        
-        enum Detail
-        {
-            Pads,
-            Headlight,
-            Filler
-        }
 
         class CarService
         {
             private readonly ReadOnlyDictionary<Breakdown, string> _breakdownDefinitions;
-            private readonly ReadOnlyDictionary<string, DetailKit> _detailNames;
-            private readonly ReadOnlyDictionary<Breakdown, Detail> _rightDetails;
+            private readonly ReadOnlyDictionary<string, DetailKit> _allDetailKits;
+
             private readonly int _missingDetailFine;
             private readonly int _badWorkFine;
             private int _money;
@@ -54,16 +47,10 @@ namespace ConsoleApp3
                 _breakdownDefinitions = new ReadOnlyDictionary<Breakdown, string>(breakdownDefinitions);
 
                 Dictionary<string, DetailKit> detailNames = new Dictionary<string, DetailKit>();
-                detailNames["Колодки"] = new DetailKit(Detail.Pads, 3);
-                detailNames["Фары"] = new DetailKit(Detail.Headlight, 3);
-                detailNames["Шпаклёвка"] = new DetailKit(Detail.Filler, 3);
-                _detailNames = new ReadOnlyDictionary<string, DetailKit>(detailNames);
-
-                Dictionary<Breakdown, Detail> rightDetails = new Dictionary<Breakdown, Detail>();
-                rightDetails[Breakdown.BrakeFailure] = Detail.Pads;
-                rightDetails[Breakdown.BrokenHeadlight] = Detail.Headlight;
-                rightDetails[Breakdown.Scratch] = Detail.Filler;
-                _rightDetails = new ReadOnlyDictionary<Breakdown, Detail>(rightDetails);
+                detailNames["Колодки"] = new DetailKit(Breakdown.BrakeFailure, 3);
+                detailNames["Фары"] = new DetailKit(Breakdown.BrokenHeadlight, 3);
+                detailNames["Шпаклёвка"] = new DetailKit(Breakdown.Scratch, 3);
+                _allDetailKits = new ReadOnlyDictionary<string, DetailKit>(detailNames);
 
                 _money = money;
                 _missingDetailFine = missingDetailFine;
@@ -78,7 +65,7 @@ namespace ConsoleApp3
                 Console.WriteLine("Поломка: " + _breakdownDefinitions[client.CurrentBreakdown]);
                 Console.WriteLine("Ящики с деталями: ");
 
-                foreach (var pair in _detailNames)
+                foreach (var pair in _allDetailKits)
                     Console.Write(pair.Key + " ");
 
                 Console.WriteLine("\nДенег в кассе: " + _money);
@@ -89,7 +76,7 @@ namespace ConsoleApp3
                     Console.Write("Выберите деталь для починки: ");
                     string fixingDetailName = Console.ReadLine();
 
-                    if (_detailNames.ContainsKey(fixingDetailName) == false)
+                    if (_allDetailKits.ContainsKey(fixingDetailName) == false)
                     {
                         if (fixingDetailName == "Refuse")
                         {
@@ -107,20 +94,20 @@ namespace ConsoleApp3
                             PrintErrorMessage("Таких деталей на складе нет.");
                         }
                     }
-                    else if(_detailNames[fixingDetailName].HasDetails == false)
+                    else if(_allDetailKits[fixingDetailName].HasDetails == false)
                     {
                         PrintErrorMessage("Подобные детали закончились.");
                     }
-                    else if (_detailNames[fixingDetailName].DetailOfKit  != _rightDetails[client.CurrentBreakdown])
+                    else if (_allDetailKits[fixingDetailName].Purpose  != client.CurrentBreakdown)
                     {
-                        _detailNames[fixingDetailName].UseDetail();
+                        _allDetailKits[fixingDetailName].TakeDetail();
                         Console.WriteLine("Выбрана неверная деталь");
                         PayFine(_badWorkFine);
                         workIsDone = true;
                     }
                     else
                     {
-                        _detailNames[fixingDetailName].UseDetail();
+                        _allDetailKits[fixingDetailName].TakeDetail();
                         Console.WriteLine("Машина починена");
                         workIsDone = true;
                         _money += client.Price;
@@ -148,7 +135,6 @@ namespace ConsoleApp3
                 {
                     _money -= fine;
                     Console.WriteLine("Штраф оплачен. Денег осталось: " + _money);
-                    WaitForTap();
                 }
             }
 
@@ -164,18 +150,18 @@ namespace ConsoleApp3
 
         class DetailKit
         {
-            public readonly Detail DetailOfKit;
+            public readonly Breakdown Purpose;
             private int _сount;
 
             public bool HasDetails => _сount > 0;
 
-            public DetailKit(Detail detail, int count)
+            public DetailKit(Breakdown purpose, int count)
             {
-                DetailOfKit = detail;
+                Purpose = purpose;
                 _сount = count;
             }
 
-            public void UseDetail()
+            public void TakeDetail()
             {
                 if (_сount > 0)
                     _сount--;
