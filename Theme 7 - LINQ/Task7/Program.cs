@@ -9,42 +9,31 @@ namespace ConsoleApp3
 
         static void Main(string[] args)
         {
-            Soldier[] allSoldiers = new Soldier[] {
-                new Soldier("Джон", "Автомат", "Сержант", 10),
-                new Soldier("Иван", "Автомат", "Ефрейтор", 5),
-                new Soldier("Борис", "Автомат", "Старший сержант", 12),
-                new Soldier("Армен", "Автомат", "Младший сержант", 8),
-                new Soldier("Андрей", "Автомат", "Рядовой", 3),
-                new Soldier("Дима", "Автомат", "Рядовой", 4)
-            };
+            List<string> firstArmy = new List<string>
+                { "Иван", "Арсений", "Дмитрий", "Олег" };
+            List<string> secondArmy = new List<string>
+                { "Борис", "Сергей", "Богдан", "Николай" };
 
-            var soldierNames = from Soldier soldier in allSoldiers select new
+            List<string> transferredSoldiers = secondArmy.Where(soldier =>
             {
-                Name = soldier.Name,
-                Rank = soldier.Rank 
-             };
+                if (soldier.ToUpper()[0] == 'Б')
+                {
+                    secondArmy.Remove(soldier);
+                    return true;
+                }
+                return false;
+            }).ToList();
 
-            foreach (var soldier in soldierNames)
-                Console.WriteLine(soldier.Rank + " " + soldier.Name);
+            firstArmy = firstArmy.Union(transferredSoldiers).ToList();
+            Console.WriteLine("Первый отряд после пополнения: ");
+
+            foreach (var soldier in firstArmy)
+                Console.WriteLine(soldier);
+
+            Console.WriteLine("Остаток второго отряда: ");
+
+            foreach (var soldier in secondArmy)
+                Console.WriteLine(soldier);
         }
     }
-
-    class Soldier
-    {
-        public string Name { get; private set; }
-        public string Weapon { get; private set; }
-        public string Rank { get; private set; }
-        public int TourTimeInMonthes { get; private set; }
-
-        public Soldier(string name, string weapon, string rank, int tourTimeInMonthes)
-        {
-            Name = name;
-            Weapon = weapon;
-            Rank = rank;
-            TourTimeInMonthes = tourTimeInMonthes;
-        }
-    }
-    
-
-    
 }
