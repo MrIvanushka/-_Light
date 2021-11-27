@@ -14,16 +14,8 @@ namespace ConsoleApp3
             List<string> secondArmy = new List<string>
                 { "Борис", "Сергей", "Богдан", "Николай" };
 
-            List<string> transferredSoldiers = secondArmy.Where(soldier =>
-            {
-                if (soldier.ToUpper()[0] == 'Б')
-                {
-                    secondArmy.Remove(soldier);
-                    return true;
-                }
-                return false;
-            }).ToList();
-
+            List<string> transferredSoldiers = secondArmy.Where(soldier => soldier.ToUpper()[0] == 'Б').ToList();
+            secondArmy = secondArmy.Except(transferredSoldiers).ToList();
             firstArmy = firstArmy.Union(transferredSoldiers).ToList();
             Console.WriteLine("Первый отряд после пополнения: ");
 
